@@ -30,8 +30,40 @@ public:
 	void update();
 
 private:
-	std::vector< std::map<uint32, Updatable*> > objects_;
+	std::vector< std::map<uint32, Updatable*> > objects1_;
+	std::vector< std::map<uint32, Updatable*> > objects2_;
+	std::vector< std::map<uint32, Updatable*> > objects3_;
+	std::vector< std::map<uint32, Updatable*> > objects4_;
+	std::vector< std::map<uint32, Updatable*> > objects5_;
 };
 
+	class UpdateThread
+	{
+	public:
+		UpdateThread(std::vector< std::map<uint32, Updatable*> > *objects_){this->objects_ = objects_;}
+		void operator()(int x)
+		{
+			std::vector< std::map<uint32, Updatable*> >::iterator fpIter = (*objects_).begin();
+			for (; fpIter != objects_->end(); ++fpIter)
+			{
+				std::map<uint32, Updatable*>& pools = (*fpIter);
+				std::map<uint32, Updatable*>::iterator iter = pools.begin();
+				for (; iter != pools.end();)
+				{
+					if (!iter->second->update())
+					{
+						pools.erase(iter++);
+					}
+					else
+					{
+						++iter;
+					}
+				}
+			}
+		}
+	private:
+		std::vector< std::map<uint32, Updatable*> > *objects_;
+	};
+	
 }
 #endif
