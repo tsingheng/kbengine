@@ -103,7 +103,7 @@ public:
 		++count_;
 
 		ProfileGroup::PROFILEVALS & stack = pProfileGroup_->stack();
-		KBE_ASSERT( stack.back() == this );
+		//KBE_ASSERT( stack.back() == this );
 
 		stack.pop_back();
 

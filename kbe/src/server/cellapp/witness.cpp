@@ -731,7 +731,13 @@ void Witness::updateEntitiesAliasID()
 			break;
 	}
 }
-
+	Network::Channel* Witness::getChannel()
+{
+	if(pEntity_ == NULL || !pEntity_->clientEntityCall())
+		return nullptr;
+	return pEntity_->clientEntityCall()->getChannel();
+}
+	
 //-------------------------------------------------------------------------------------
 bool Witness::update()
 {
@@ -871,7 +877,7 @@ bool Witness::update()
 					pEntity_->id(), pSendBundleMessageLength));
 			}
 
-			AUTO_SCOPED_PROFILE("sendToClient");
+			//AUTO_SCOPED_PROFILE("sendToClient");
 			pChannel->send(pSendBundle);
 		}
 		else
@@ -893,6 +899,7 @@ bool Witness::update()
 	}
 
 	static bool notificationScriptEnd = PyObject_HasAttrString(pEntity_, "onUpdateEnd") > 0;
+	notificationScriptEnd = false;
 	if (notificationScriptEnd)
 	{
 		PyObject* pyResult = PyObject_CallMethod(pEntity_,
@@ -959,10 +966,12 @@ void Witness::addUpdateToStream(Network::Bundle* pForwardBundle, uint32 flags, E
 
 	static uint8 type = g_kbeSrvConfig.getCellApp().entity_posdir_updates_type;
 	static uint16 threshold = g_kbeSrvConfig.getCellApp().entity_posdir_updates_smart_threshold;
-	
+
+	DEBUG_MSG(fmt::format("type={}, threshold={}", type, threshold));
 	bool isOptimized = true;
 	if ((type == 2 && clientViewSize_ <= threshold) || type == 0)
 	{
+		DEBUG_MSG("isOptimized=false");
 		isOptimized = false;
 	} 
 	

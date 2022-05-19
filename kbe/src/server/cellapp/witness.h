@@ -120,6 +120,8 @@ public:
 	INLINE const Direction3D& baseDir();
 
 	bool update();
+
+	Network::Channel* getChannel();
 	
 	void onEnterSpace(SpaceMemory* pSpace);
 	void onLeaveSpace(SpaceMemory* pSpace);

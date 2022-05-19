@@ -31,6 +31,8 @@ public:
 
 private:
 	std::vector< std::map<uint32, Updatable*> > objects_;
+	std::map<std::string, uint32> map_;
+	int base_index;
 };
 
 }

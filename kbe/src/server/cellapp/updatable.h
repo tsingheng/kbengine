@@ -28,6 +28,8 @@ public:
 
 	virtual bool update() = 0;
 
+	virtual Network::Channel* getChannel() {return nullptr;}
+
 	virtual uint8 updatePriority() const {
 		return 0;
 	}
